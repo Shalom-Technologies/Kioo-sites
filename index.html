@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kioo</title>
+<meta name="description" content="A website and chatbot for your salon or barbershop, set up in minutes. Join the Kioo waitlist.">
+<meta property="og:title" content="Kioo">
+<meta property="og:description" content="A salon website with a chatbot that answers how much? for you. Join the waitlist.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#A8215F">
+<style>
+:root { color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: mobile-first single column; hero splits into headline + mirror-framed demo chat from 860px. */
+:root {
+  --bg: #F7F4F9;
+  --surface: #FFFFFF;
+  --ink: #211829;
+  --muted: #5E5667;
+  --line: #E3DCE9;
+  --accent: #A8215F;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #F6E3EC;
+  --bubble-bot: #EFE9F3;
+  --wa: #0B6E55;
+  --wa-ink: #FFFFFF;
+  --danger: #B3261E;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17111C; --surface: #211A28; --ink: #F3EEF6; --muted: #B6ACC0; --line: #3A2F44;
+    --accent: #E0558F; --accent-ink: #1A0F16; --accent-soft: #3A1E2D; --bubble-bot: #2D2437;
+    --wa: #35C28F; --wa-ink: #07241B; --danger: #FF8A80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17111C; --surface: #211A28; --ink: #F3EEF6; --muted: #B6ACC0; --line: #3A2F44;
+  --accent: #E0558F; --accent-ink: #1A0F16; --accent-soft: #3A1E2D; --bubble-bot: #2D2437;
+  --wa: #35C28F; --wa-ink: #07241B; --danger: #FF8A80;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+p { margin: 0; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.wrap { max-width: 1040px; margin: 0 auto; }
+
+/* Header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 16px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; letter-spacing: -0.03em; }
+.brand span { color: var(--accent); }
+.lang { display: inline-flex; border: 1.5px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+.lang button { border: 0; background: transparent; padding: 6px 14px; border-radius: 999px; cursor: pointer; font-weight: 700; font-size: 0.85rem; color: var(--muted); }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 12px 24px; border-radius: 12px; border: 0; font-weight: 700; cursor: pointer; text-decoration: none; text-align: center; }
+.btn-primary { background: var(--accent); color: var(--accent-ink); }
+.btn-wa { background: var(--wa); color: var(--wa-ink); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn:disabled { opacity: 0.6; cursor: default; }
+
+/* Hero */
+.hero { display: grid; gap: 40px; padding-block: 24px 56px; align-items: center; }
+.eyebrow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.hero h1 { font-size: clamp(2.1rem, 7.4vw, 3.7rem); font-weight: 800; }
+.hero .sub { margin-top: 18px; font-size: 1.12rem; color: var(--muted); max-width: 34em; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.fine { margin-top: 14px; font-size: 0.9rem; color: var(--muted); }
+
+/* Mirror-framed demo chat */
+.mirror { width: 100%; max-width: 380px; margin: 0 auto; padding: 9px; border: 1.5px solid var(--line); background: var(--accent-soft); border-radius: 190px 190px 28px 28px; }
+.mirror-in { background: var(--surface); border-radius: 182px 182px 20px 20px; padding: 44px 16px 16px; }
+.chat-head { text-align: center; margin-bottom: 12px; }
+.chat-head strong { display: block; font-family: var(--font-display); font-size: 1.1rem; }
+.chat-head small { color: var(--muted); font-size: 0.78rem; }
+.log { display: flex; flex-direction: column; gap: 8px; height: 270px; overflow-y: auto; padding: 4px 2px; }
+.msg { max-width: 88%; padding: 9px 13px; border-radius: 16px; font-size: 0.95rem; line-height: 1.4; }
+.msg.bot { background: var(--bubble-bot); align-self: flex-start; border-bottom-left-radius: 5px; }
+.msg.you { background: var(--accent); color: var(--accent-ink); align-self: flex-end; border-bottom-right-radius: 5px; }
+.msg.typing { color: var(--muted); letter-spacing: 0.15em; }
+.chips-label { margin: 12px 0 8px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1.5px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; cursor: pointer; font-size: 0.9rem; }
+.chip:hover { border-color: var(--accent); }
+
+/* Sections */
+section { padding-block: 56px; border-top: 1.5px solid var(--line); }
+section h2 { font-size: clamp(1.6rem, 4.5vw, 2.3rem); font-weight: 700; margin-bottom: 28px; }
+.steps { display: grid; gap: 28px; list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 44px 1fr; gap: 6px 16px; }
+.steps li::before { content: counter(s); grid-row: span 2; width: 44px; height: 44px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; display: grid; place-items: center; }
+.steps h3 { font-size: 1.2rem; align-self: end; }
+.steps p { color: var(--muted); }
+.gets { display: grid; gap: 14px; list-style: none; margin: 0; padding: 0; }
+.gets li { padding-left: 28px; position: relative; }
+.gets li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 14px; height: 8px; border-left: 3px solid var(--accent); border-bottom: 3px solid var(--accent); transform: rotate(-45deg); }
+.gets b { font-weight: 700; }
+
+/* Form */
+.join { background: var(--surface); border: 1.5px solid var(--line); border-radius: 20px; padding: 24px 18px; }
+.join h2 { margin-bottom: 8px; }
+.join .lead { color: var(--muted); margin-bottom: 22px; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; min-width: 0; }
+.field label { font-weight: 700; font-size: 0.92rem; }
+.field input, .field select { width: 100%; min-height: 50px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--bg); }
+.field input[aria-invalid="true"], .field select[aria-invalid="true"] { border-color: var(--danger); }
+.err { color: var(--danger); font-size: 0.85rem; min-height: 0; }
+.err:empty { display: none; }
+.grid2 { display: grid; gap: 0 16px; }
+.alt { margin-top: 18px; font-size: 0.95rem; color: var(--muted); }
+.alt a { color: var(--accent); font-weight: 700; }
+.done h2 { margin-bottom: 10px; }
+.done p { color: var(--muted); margin-bottom: 20px; }
+
+/* FAQ */
+details { border-bottom: 1.5px solid var(--line); padding-block: 4px; }
+summary { cursor: pointer; font-weight: 700; padding-block: 14px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--accent); font-size: 1.4rem; line-height: 1; }
+details[open] summary::after { content: "\2212"; }
+details p { color: var(--muted); padding-bottom: 16px; max-width: 40em; }
+
+footer { border-top: 1.5px solid var(--line); padding-block: 28px 40px; color: var(--muted); font-size: 0.88rem; display: grid; gap: 6px; }
+
+@media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } .steps { grid-template-columns: repeat(3, 1fr); } .steps li { grid-template-columns: 1fr; } .steps li::before { grid-row: auto; margin-bottom: 8px; } .join { padding: 32px; } }
+@media (min-width: 860px) { .hero { grid-template-columns: 1.15fr 0.85fr; gap: 56px; padding-block: 40px 72px; } }
+@media (prefers-reduced-motion: no-preference) { .msg { animation: pop 0.18s ease-out; } @keyframes pop { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Kioo<span>.</span></div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" aria-pressed="true">English</button>
+      <button type="button" id="lang-sw" aria-pressed="false">Kiswahili</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow">For salons, barbershops and beauty shops</p>
+        <h1 data-i18n="h1">A salon website with a chatbot that answers "how much?" for you.</h1>
+        <p class="sub" data-i18n="sub">Answer 10 questions. Get a website and a chatbot that tells your customers your prices, hours and location. Set up in minutes, from your phone.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#join-form" id="cta-join" data-i18n="cta">Join the waitlist</a>
+          <a class="btn btn-ghost" href="#demo-anchor" data-i18n="cta2">Try the chatbot</a>
+        </div>
+        <p class="fine" data-i18n="fine">Founding members get free setup and a place in the first pilot.</p>
+      </div>
+
+      <div class="mirror" id="demo-anchor">
+        <div class="mirror-in">
+          <div class="chat-head">
+            <strong>Zawadi Beauty Lounge</strong>
+            <small data-i18n="sample">Sample salon for this demo</small>
+          </div>
+          <div class="log" id="log" role="log" aria-live="polite"></div>
+          <p class="chips-label" data-i18n="tap">Tap a question</p>
+          <div class="chips" id="chips"></div>
+        </div>
+      </div>
+    </div>
+
+    <section>
+      <h2 data-i18n="stepsH">Live in three steps</h2>
+      <ol class="steps">
+        <li><h3 data-i18n="s1h">Answer 10 questions</h3><p data-i18n="s1p">Services, prices, opening hours, photos and where you are.</p></li>
+        <li><h3 data-i18n="s2h">Upload your price list</h3><p data-i18n="s2p">A photo or a document. The chatbot learns your answers from it.</p></li>
+        <li><h3 data-i18n="s3h">Share your link</h3><p data-i18n="s3p">Put it on Instagram, WhatsApp status or your door. Customers find you and ask away.</p></li>
+      </ol>
+    </section>
+
+    <section>
+      <h2 data-i18n="getsH">What you get</h2>
+      <ul class="gets">
+        <li><b data-i18n="g1b">Your own website.</b> <span data-i18n="g1">Services, prices, photos, hours and a map.</span></li>
+        <li><b data-i18n="g2b">A WhatsApp button.</b> <span data-i18n="g2">Customers message your number straight from the site.</span></li>
+        <li><b data-i18n="g3b">A chatbot that knows your business.</b> <span data-i18n="g3">It answers from your price list and passes you the questions it cannot answer.</span></li>
+        <li><b data-i18n="g4b">English, Swahili and Sheng.</b> <span data-i18n="g4">It replies in the language your customer uses.</span></li>
+        <li><b data-i18n="g5b">M-Pesa payment links.</b> <span data-i18n="g5">Being built now, so customers can pay you without a long back and forth.</span></li>
+      </ul>
+    </section>
+
+    <section id="join">
+      <div class="join" id="join-box">
+        <div id="form-view">
+          <h2 data-i18n="joinH">Join the founding salons</h2>
+          <p class="lead" data-i18n="joinLead">Free setup and a spot in the first pilot of 5 businesses. Takes one minute.</p>
+          <form id="join-form" novalidate>
+            <div class="grid2">
+              <div class="field">
+                <label for="f-name" data-i18n="lName">Your name</label>
+                <input id="f-name" name="name" type="text" autocomplete="name" required>
+                <div class="err" id="e-name"></div>
+              </div>
+              <div class="field">
+                <label for="f-biz" data-i18n="lBiz">Business name</label>
+                <input id="f-biz" name="business" type="text" autocomplete="organization" required>
+                <div class="err" id="e-biz"></div>
+              </div>
+              <div class="field">
+                <label for="f-type" data-i18n="lType">Type of business</label>
+                <select id="f-type" name="type" required>
+                  <option value="" data-i18n="oPick">Choose one</option>
+                  <option value="salon" data-i18n="oSalon">Salon</option>
+                  <option value="barbershop" data-i18n="oBarber">Barbershop / Kinyozi</option>
+                  <option value="beauty" data-i18n="oBeauty">Beauty salon (nails, makeup, spa)</option>
+                  <option value="other" data-i18n="oOther">Other</option>
+                </select>
+                <div class="err" id="e-type"></div>
+              </div>
+              <div class="field">
+                <label for="f-area" data-i18n="lArea">Area</label>
+                <input id="f-area" name="area" type="text" autocomplete="address-level2" placeholder="Rongai, Kasarani, Westlands..." required>
+                <div class="err" id="e-area"></div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="f-phone" data-i18n="lPhone">WhatsApp number</label>
+              <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0712 345 678" required>
+              <div class="err" id="e-phone"></div>
+            </div>
+            <button class="btn btn-primary" type="submit" id="submit" data-i18n="cta">Join the waitlist</button>
+          </form>
+          <p class="alt"><span data-i18n="altQ">Prefer to ask first?</span> <a id="wa-ask" href="#" target="_blank" rel="noopener" data-i18n="altA">Message us on WhatsApp</a></p>
+        </div>
+        <div class="done" id="done-view" hidden>
+          <h2 id="done-h"></h2>
+          <p id="done-p"></p>
+          <a class="btn btn-wa" id="wa-send" href="#" target="_blank" rel="noopener" data-i18n="sendWa">Send my details on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 data-i18n="faqH">Questions owners ask</h2>
+      <details><summary data-i18n="q1">Do I need a computer?</summary><p data-i18n="a1">No. You can set up everything from your phone.</p></details>
+      <details><summary data-i18n="q2">Does it work in Swahili?</summary><p data-i18n="a2">Yes. The site and chatbot reply in English or Swahili, and we are testing Sheng with salon owners now.</p></details>
+      <details><summary data-i18n="q3">How do I get paid?</summary><p data-i18n="a3">We are building M-Pesa payment links so customers can pay you directly. You will be able to use your own till or paybill.</p></details>
+      <details><summary data-i18n="q4">What if the chatbot does not know the answer?</summary><p data-i18n="a4">It says so and passes the question to you, so a customer never gets a made-up price.</p></details>
+      <details><summary data-i18n="q5">How much will it cost?</summary><p data-i18n="a5">Founding members get free setup and the pilot. We will share monthly prices before anything is charged.</p></details>
+    </section>
+  </main>
+
+  <footer>
+    <div><strong>Kioo</strong> &middot; <span data-i18n="made">Made in Nairobi for Kenyan salons.</span></div>
+    <div data-i18n="foot">Zawadi Beauty Lounge, its prices and its till number are made up for the demo.</div>
+  </footer>
+</div>
+
+<script>
+/* Replace with the WhatsApp number that should receive signups, in the form 2547XXXXXXXX. */
+const FOUNDER_WA = "254731382221";
+
+const T = {
+  en: {
+    eyebrow: "For salons, barbershops and beauty shops",
+    h1: "A salon website with a chatbot that answers “how much?” for you.",
+    sub: "Answer 10 questions. Get a website and a chatbot that tells your customers your prices, hours and location. Set up in minutes, from your phone.",
+    cta: "Join the waitlist", cta2: "Try the chatbot",
+    fine: "Founding members get free setup and a place in the first pilot.",
+    sample: "Sample salon for this demo", tap: "Tap a question",
+    stepsH: "Live in three steps",
+    s1h: "Answer 10 questions", s1p: "Services, prices, opening hours, photos and where you are.",
+    s2h: "Upload your price list", s2p: "A photo or a document. The chatbot learns your answers from it.",
+    s3h: "Share your link", s3p: "Put it on Instagram, WhatsApp status or your door. Customers find you and ask away.",
+    getsH: "What you get",
+    g1b: "Your own website.", g1: "Services, prices, photos, hours and a map.",
+    g2b: "A WhatsApp button.", g2: "Customers message your number straight from the site.",
+    g3b: "A chatbot that knows your business.", g3: "It answers from your price list and passes you the questions it cannot answer.",
+    g4b: "English, Swahili and Sheng.", g4: "It replies in the language your customer uses.",
+    g5b: "M-Pesa payment links.", g5: "Being built now, so customers can pay you without a long back and forth.",
+    joinH: "Join the founding salons", joinLead: "Free setup and a spot in the first pilot of 5 businesses. Takes one minute.",
+    lName: "Your name", lBiz: "Business name", lType: "Type of business", lArea: "Area", lPhone: "WhatsApp number",
+    oPick: "Choose one", oSalon: "Salon", oBarber: "Barbershop / Kinyozi", oBeauty: "Beauty salon (nails, makeup, spa)", oOther: "Other",
+    altQ: "Prefer to ask first?", altA: "Message us on WhatsApp", sendWa: "Send my details on WhatsApp",
+    faqH: "Questions owners ask",
+    q1: "Do I need a computer?", a1: "No. You can set up everything from your phone.",
+    q2: "Does it work in Swahili?", a2: "Yes. The site and chatbot reply in English or Swahili, and we are testing Sheng with salon owners now.",
+    q3: "How do I get paid?", a3: "We are building M-Pesa payment links so customers can pay you directly. You will be able to use your own till or paybill.",
+    q4: "What if the chatbot does not know the answer?", a4: "It says so and passes the question to you, so a customer never gets a made-up price.",
+    q5: "How much will it cost?", a5: "Founding members get free setup and the pilot. We will share monthly prices before anything is charged.",
+    made: "Made in Nairobi for Kenyan salons.", foot: "Zawadi Beauty Lounge, its prices and its till number are made up for the demo.",
+    eName: "Enter your name.", eBiz: "Enter your business name.", eType: "Choose a business type.", eArea: "Enter your area.",
+    ePhone: "Enter a Kenyan number like 0712 345 678.",
+    doneSavedH: "You are on the list, {n}.", doneSavedP: "We will message you on WhatsApp about your free setup. Sending your details on WhatsApp now helps us find you faster.",
+    doneOpenH: "One more step, {n}.", doneOpenP: "Tap the button to send your details to us on WhatsApp. That puts {b} on the waitlist.",
+    waAsk: "Hi Kioo, I have a question about the website and chatbot for salons.",
+    waJoin: "Hi Kioo, I want to join the waitlist.",
+    wName: "Name", wBiz: "Business", wType: "Type", wArea: "Area", wSrc: "Source"
+  },
+  sw: {
+    eyebrow: "Kwa saluni, vinyozi na maduka ya urembo",
+    h1: "Tovuti ya saluni yenye chatbot inayojibu “bei gani?” kwa niaba yako.",
+    sub: "Jibu maswali 10. Pata tovuti na chatbot inayowaambia wateja bei, saa za kufungua na mahali ulipo. Tayari kwa dakika chache, kwa simu yako.",
+    cta: "Jiunge na orodha", cta2: "Jaribu chatbot",
+    fine: "Wanachama wa kwanza wanapata usanidi bila malipo na nafasi katika majaribio ya kwanza.",
+    sample: "Saluni ya mfano kwa onyesho hili", tap: "Gusa swali",
+    stepsH: "Tayari kwa hatua tatu",
+    s1h: "Jibu maswali 10", s1p: "Huduma, bei, saa za kufungua, picha na mahali ulipo.",
+    s2h: "Pakia orodha ya bei", s2p: "Picha au hati. Chatbot hujifunza majibu kutoka hapo.",
+    s3h: "Shiriki kiungo chako", s3p: "Kiweke Instagram, WhatsApp status au mlangoni. Wateja wanakupata na kuuliza.",
+    getsH: "Unachopata",
+    g1b: "Tovuti yako mwenyewe.", g1: "Huduma, bei, picha, saa za kufungua na ramani.",
+    g2b: "Kitufe cha WhatsApp.", g2: "Wateja wanakutumia ujumbe moja kwa moja kutoka kwenye tovuti.",
+    g3b: "Chatbot inayojua biashara yako.", g3: "Inajibu kutoka kwenye orodha yako ya bei na inakupitishia maswali isiyoweza kujibu.",
+    g4b: "Kiingereza, Kiswahili na Sheng.", g4: "Inajibu kwa lugha anayotumia mteja wako.",
+    g5b: "Viungo vya malipo vya M-Pesa.", g5: "Vinajengwa sasa, ili wateja wakulipe bila mizunguko mingi.",
+    joinH: "Jiunge na saluni za kwanza", joinLead: "Usanidi bila malipo na nafasi katika majaribio ya kwanza ya biashara 5. Inachukua dakika moja.",
+    lName: "Jina lako", lBiz: "Jina la biashara", lType: "Aina ya biashara", lArea: "Eneo", lPhone: "Namba ya WhatsApp",
+    oPick: "Chagua moja", oSalon: "Saluni", oBarber: "Kinyozi / Barbershop", oBeauty: "Saluni ya urembo (kucha, makeup, spa)", oOther: "Nyingine",
+    altQ: "Unataka kuuliza kwanza?", altA: "Tutumie ujumbe WhatsApp", sendWa: "Tuma maelezo yangu WhatsApp",
+    faqH: "Maswali wanayouliza wamiliki",
+    q1: "Je, ninahitaji kompyuta?", a1: "Hapana. Unaweza kusanidi kila kitu kwa simu yako.",
+    q2: "Je, inafanya kazi kwa Kiswahili?", a2: "Ndiyo. Tovuti na chatbot hujibu kwa Kiingereza au Kiswahili, na tunajaribu Sheng na wamiliki wa saluni sasa hivi.",
+    q3: "Nitalipwa vipi?", a3: "Tunajenga viungo vya malipo vya M-Pesa ili wateja wakulipe moja kwa moja. Utaweza kutumia till au paybill yako mwenyewe.",
+    q4: "Chatbot isipojua jibu itafanyaje?", a4: "Inasema hivyo na kukupitishia swali, ili mteja asipewe bei ya kubuni.",
+    q5: "Itagharimu kiasi gani?", a5: "Wanachama wa kwanza wanapata usanidi na majaribio bila malipo. Tutashiriki bei za kila mwezi kabla ya kutoza chochote.",
+    made: "Imetengenezwa Nairobi kwa saluni za Kenya.", foot: "Zawadi Beauty Lounge, bei zake na namba ya till ni za kubuni kwa onyesho.",
+    eName: "Weka jina lako.", eBiz: "Weka jina la biashara.", eType: "Chagua aina ya biashara.", eArea: "Weka eneo lako.",
+    ePhone: "Weka namba ya Kenya kama 0712 345 678.",
+    doneSavedH: "Uko kwenye orodha, {n}.", doneSavedP: "Tutakutumia ujumbe WhatsApp kuhusu usanidi wako bila malipo. Kutuma maelezo yako WhatsApp sasa hutusaidia kukupata haraka.",
+    doneOpenH: "Hatua moja zaidi, {n}.", doneOpenP: "Gusa kitufe kutuma maelezo yako kwetu WhatsApp. Hiyo inaweka {b} kwenye orodha.",
+    waAsk: "Habari Kioo, nina swali kuhusu tovuti na chatbot ya saluni.",
+    waJoin: "Habari Kioo, nataka kujiunga na orodha.",
+    wName: "Jina", wBiz: "Biashara", wType: "Aina", wArea: "Eneo", wSrc: "Chanzo"
+  }
+};
+
+const CHAT = {
+  en: {
+    hello: "Karibu Zawadi Beauty Lounge! Ask me anything.",
+    q: { braids: "How much for braids?", where: "Where are you?", sunday: "Are you open on Sunday?", mpesa: "Can I pay by M-Pesa?", bridal: "Do you do bridal makeup?" },
+    a: {
+      braids: "Knotless braids start at KSh 2,500. Box braids from KSh 2,000. Send a photo of the style you want and we will give you an exact price.",
+      where: "We are on Ngong Road, 2nd floor, above Joy Pharmacy. The pin is on Google Maps.",
+      sunday: "Yes. Monday to Saturday 8am to 8pm, Sunday 10am to 5pm. Book early for Saturdays.",
+      mpesa: "Yes. Till number 123456. Show us the M-Pesa message when you arrive.",
+      bridal: "I do not have that one. I have passed your question to the owner and she will reply on WhatsApp."
+    }
+  },
+  sw: {
+    hello: "Karibu Zawadi Beauty Lounge! Niulize chochote.",
+    q: { braids: "Braids ni how much?", where: "Mko wapi?", sunday: "Mko open Jumapili?", mpesa: "Naweza lipa na M-Pesa?", bridal: "Mnafanya bridal makeup?" },
+    a: {
+      braids: "Knotless braids zinaanza KSh 2,500. Box braids kutoka KSh 2,000. Tuma picha ya mtindo unaotaka tukupe bei kamili.",
+      where: "Tuko Ngong Road, ghorofa ya 2, juu ya Joy Pharmacy. Pin iko kwenye Google Maps.",
+      sunday: "Ndiyo. Jumatatu hadi Jumamosi 8am hadi 8pm, Jumapili 10am hadi 5pm. Weka nafasi mapema kwa Jumamosi.",
+      mpesa: "Ndiyo. Till namba 123456. Tuonyeshe ujumbe wa M-Pesa ukifika.",
+      bridal: "Sina jibu la hilo. Nimempitishia mwenye saluni swali lako na atakujibu WhatsApp."
+    }
+  }
+};
+
+let lang = "en";
+try {
+  const saved = localStorage.getItem("kioo-lang");
+  if (saved === "en" || saved === "sw") lang = saved;
+  else if ((navigator.language || "").toLowerCase().startsWith("sw")) lang = "sw";
+} catch (e) { /* storage unavailable, keep default */ }
+
+const $ = (id) => document.getElementById(id);
+const chatTurns = [];     // [{who:"bot"|"you", k:"hello"|<question key>, answer:bool}]
+let typing = false;
+let signup = null;      // set after a successful submit
+
+function source() {
+  const h = (location.hash || "").replace("#", "").toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 24);
+  if (!h || h === "join-form" || h === "demo-anchor" || h === "join") return "direct";
+  return h;
+}
+
+const SRC = source();   /* read once on load: the CTA links change the hash afterwards */
+
+function waLink(text) {
+  return "https://wa.me/" + FOUNDER_WA + "?text=" + encodeURIComponent(text);
+}
+
+function renderChat() {
+  const log = $("log");
+  log.textContent = "";
+  const add = (cls, text) => { const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; log.appendChild(d); };
+  add("bot", CHAT[lang].hello);
+  chatTurns.forEach((m) => add(m.who === "you" ? "you" : "bot", m.who === "you" ? CHAT[lang].q[m.k] : CHAT[lang].a[m.k]));
+  if (typing) add("bot typing", "•••");
+  log.scrollTop = log.scrollHeight;
+
+  const chips = $("chips");
+  chips.textContent = "";
+  Object.keys(CHAT[lang].q).forEach((k) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = CHAT[lang].q[k];
+    b.addEventListener("click", () => ask(k));
+    chips.appendChild(b);
+  });
+}
+
+function ask(k) {
+  if (typing) return;
+  chatTurns.push({ who: "you", k });
+  typing = true;
+  renderChat();
+  setTimeout(() => { typing = false; chatTurns.push({ who: "bot", k }); renderChat(); }, 650);
+}
+
+function renderDone() {
+  if (!signup) return;
+  const t = T[lang];
+  const n = signup.name.split(" ")[0];
+  $("done-h").textContent = (signup.saved ? t.doneSavedH : t.doneOpenH).replace("{n}", n);
+  $("done-p").textContent = (signup.saved ? t.doneSavedP : t.doneOpenP).replace("{b}", signup.business);
+  const lines = [t.waJoin, t.wName + ": " + signup.name, t.wBiz + ": " + signup.business, t.wType + ": " + signup.type, t.wArea + ": " + signup.area, t.wSrc + ": " + signup.source];
+  $("wa-send").href = waLink(lines.join("\n"));
+}
+
+function applyLang() {
+  document.documentElement.lang = lang === "sw" ? "sw" : "en";
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const v = T[lang][el.getAttribute("data-i18n")];
+    if (v) el.textContent = v;
+  });
+  $("lang-en").setAttribute("aria-pressed", String(lang === "en"));
+  $("lang-sw").setAttribute("aria-pressed", String(lang === "sw"));
+  $("wa-ask").href = waLink(T[lang].waAsk);
+  renderChat();
+  renderDone();
+  document.querySelectorAll(".err").forEach((e) => { if (e.dataset.key) e.textContent = T[lang][e.dataset.key]; });
+}
+
+function setLang(l) {
+  lang = l;
+  try { localStorage.setItem("kioo-lang", l); } catch (e) { /* ignore */ }
+  applyLang();
+}
+$("lang-en").addEventListener("click", () => setLang("en"));
+$("lang-sw").addEventListener("click", () => setLang("sw"));
+
+function setErr(field, errId, key) {
+  const el = $(errId);
+  el.dataset.key = key || "";
+  el.textContent = key ? T[lang][key] : "";
+  $(field).setAttribute("aria-invalid", key ? "true" : "false");
+  return !key;
+}
+
+function normalizePhone(v) {
+  const m = v.replace(/[\s-]/g, "").match(/^(?:\+?254|0)?([17]\d{8})$/);
+  return m ? "254" + m[1] : null;
+}
+
+function withTimeout(p, ms) {
+  return Promise.race([p, new Promise((r) => setTimeout(() => r(null), ms))]);
+}
+
+async function saveToDb(rec) {
+  try {
+    if (!window.claude || !window.claude.use) return false;
+    const db = await withTimeout(window.claude.use("db"), 3000);
+    if (!db) return false;
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    await db.collection("waitlist").doc(id).set(rec);
+    return true;
+  } catch (e) { return false; }
+}
+
+$("join-form").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const name = $("f-name").value.trim();
+  const business = $("f-biz").value.trim();
+  const type = $("f-type").value;
+  const area = $("f-area").value.trim();
+  const phone = normalizePhone($("f-phone").value);
+  const checks = [
+    setErr("f-name", "e-name", name ? "" : "eName"),
+    setErr("f-biz", "e-biz", business ? "" : "eBiz"),
+    setErr("f-type", "e-type", type ? "" : "eType"),
+    setErr("f-area", "e-area", area ? "" : "eArea"),
+    setErr("f-phone", "e-phone", phone ? "" : "ePhone")
+  ];
+  if (checks.includes(false)) {
+    const first = document.querySelector('[aria-invalid="true"]');
+    if (first) first.focus();
+    return;
+  }
+  const btn = $("submit");
+  btn.disabled = true;
+  const label = $("f-type").selectedOptions[0].textContent;
+  const rec = { name, business, type, phone, area, source: SRC, lang, createdAt: new Date().toISOString() };
+  const saved = await saveToDb(rec);
+  signup = { name, business, type: label, area, source: rec.source, saved };
+  $("form-view").hidden = true;
+  $("done-view").hidden = false;
+  renderDone();
+  $("join-box").scrollIntoView({ block: "start" });
+  btn.disabled = false;
+});
+
+applyLang();
+</script>
+</body>
+</html>
