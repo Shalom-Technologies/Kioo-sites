@@ -123,6 +123,7 @@ section h2 { font-size: clamp(1.6rem, 4.5vw, 2.3rem); font-weight: 700; margin-b
 .join { background: var(--surface); border: 1.5px solid var(--line); border-radius: 20px; padding: 24px 18px; }
 .join h2 { margin-bottom: 8px; }
 .join .lead { color: var(--muted); margin-bottom: 22px; }
+.privacy { margin-top: 14px; font-size: 0.88rem; color: var(--muted); max-width: 34em; }
 .alt { margin-top: 18px; font-size: 0.95rem; color: var(--muted); }
 .alt a { color: var(--accent); font-weight: 700; }
 
@@ -202,6 +203,7 @@ footer { border-top: 1.5px solid var(--line); padding-block: 28px 40px; color: v
         <h2 data-i18n="joinH">Join the founding salons</h2>
         <p class="lead" data-i18n="joinLead">Free setup and a spot in the first pilot of 5 businesses. Takes one minute.</p>
         <a class="btn btn-primary" id="join-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSe8Q554ApgQXNMUCtgkqDoz7Pa1Kuc2hBhFT90TamaLqK6PkQ/viewform" target="_blank" rel="noopener" data-i18n="cta">Join the waitlist</a>
+        <p class="privacy" data-i18n="privacy">We only use your details to contact you about Kioo. We never sell or share them.</p>
         <p class="alt"><span data-i18n="altQ">Prefer to ask first?</span> <a id="wa-ask" href="#" target="_blank" rel="noopener" data-i18n="altA">Message us on WhatsApp</a></p>
       </div>
     </section>
@@ -248,6 +250,7 @@ const T = {
     lName: "Your name", lBiz: "Business name", lType: "Type of business", lArea: "Area", lPhone: "WhatsApp number",
     oPick: "Choose one", oSalon: "Salon", oBarber: "Barbershop / Kinyozi", oBeauty: "Beauty salon (nails, makeup, spa)", oOther: "Other",
     altQ: "Prefer to ask first?", altA: "Message us on WhatsApp", sendWa: "Send my details on WhatsApp",
+    privacy: "We only use your details to contact you about Kioo. We never sell or share them.",
     formQ: "Prefer a form?", formA: "Join with our Google Form",
     faqH: "Questions owners ask",
     q1: "Do I need a computer?", a1: "No. You can set up everything from your phone.",
@@ -285,6 +288,7 @@ const T = {
     lName: "Jina lako", lBiz: "Jina la biashara", lType: "Aina ya biashara", lArea: "Eneo", lPhone: "Namba ya WhatsApp",
     oPick: "Chagua moja", oSalon: "Saluni", oBarber: "Kinyozi / Barbershop", oBeauty: "Saluni ya urembo (kucha, makeup, spa)", oOther: "Nyingine",
     altQ: "Unataka kuuliza kwanza?", altA: "Tutumie ujumbe WhatsApp", sendWa: "Tuma maelezo yangu WhatsApp",
+    privacy: "Tunatumia maelezo yako kukuwasiliana nawe kuhusu Kioo pekee. Hatuyauzi wala kuyashiriki.",
     formQ: "Unapendelea fomu?", formA: "Jiunge kupitia Google Form yetu",
     faqH: "Maswali wanayouliza wamiliki",
     q1: "Je, ninahitaji kompyuta?", a1: "Hapana. Unaweza kusanidi kila kitu kwa simu yako.",
